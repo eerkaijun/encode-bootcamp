@@ -6,6 +6,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 pragma solidity ^0.8.0;
 
 contract VolcanoCoin is ERC20, Ownable {
+
+    uint public constant version = 1;
     
     mapping(address => Payment[]) public transfers;
     
