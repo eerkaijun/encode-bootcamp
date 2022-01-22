@@ -18,4 +18,17 @@ interface CErc20 {
 contract DeFi {
     address DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
     address cDAI = 0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643;
+
+    Erc20 DAIContract;
+    CErc20 cDAIContract;
+
+    constructor() {
+        DAIContract = Erc20(DAI);
+        cDAIContract = CErc20(cDAI);
+    }
+
+    function addToCompound(uint256 amount) public {
+        DAIContract.approve(cDAI, amount);
+        cDAIContract.mint(amount);
+    }
 }
