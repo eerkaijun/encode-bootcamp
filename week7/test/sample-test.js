@@ -8,14 +8,14 @@ const { solidity } = require("ethereum-waffle");
 use(solidity);
 
 const DAIAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
-const USDCAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
+const cDAIAddress = "0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643";
 
 describe("DeFi", function () {
 
   const INITIAL_AMOUNT = 999999999000000;
   let owner;
   let DAI_TokenContract;
-  let USDC_TokenContract;
+  let cDAI_TokenContract;
   let DeFi_Instance;
 
   before(async function () {
@@ -26,7 +26,7 @@ describe("DeFi", function () {
     console.log("owner account is ", owner.address);
 
     DAI_TokenContract = await ethers.getContractAt("Erc20", DAIAddress);
-    USDC_TokenContract = await ethers.getContractAt("Erc20", USDCAddress);
+    cDAI_TokenContract = await ethers.getContractAt("CErc20", cDAIAddress);
     const DeFi = await ethers.getContractFactory("DeFi");
 
     await DAI_TokenContract.connect(whale).transfer(
@@ -37,10 +37,18 @@ describe("DeFi", function () {
     DeFi_Instance = await DeFi.deploy();
     await DeFi_Instance.deployed();
   });
+ 
+  it("Should be able to deposit to Compound", async function () {
+    await DAI_TokenContract.connect(owner).transfer(
+      DeFi_Instance.address,
+      INITIAL_AMOUNT
+    );
+    expect(await DAI_TokenContract.balanceOf(DeFi_Instance.address)).to.equal(INITIAL_AMOUNT);
 
-  it("Should return the new greeting once it's changed", async function () {
+    let tx = await DeFi_Instance.connect(owner).addToCompound(INITIAL_AMOUNT);
+    tx.wait();
 
-
-
+    const cDAIBalance = await cDAI_TokenContract.balanceOf(DeFi_Instance.address);
+    console.log("Balance: ", cDAIBalance);
   });
 });
