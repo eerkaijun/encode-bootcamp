@@ -1,3 +1,6 @@
+// command to start local fork
+// npx ganache-cli -f https://mainnet.infura.io/v3/0842113999df48a8a354df21fe0ea695 --unlock 0x503828976D22510aad0201ac7EC88293211D23Da -p 8545
+
 const { expect, use } = require("chai");
 const { ethers } = require("hardhat");
 
@@ -32,6 +35,7 @@ describe("DeFi", function () {
     );
 
     DeFi_Instance = await DeFi.deploy();
+    await DeFi_Instance.deployed();
   });
 
   it("Should return the new greeting once it's changed", async function () {
