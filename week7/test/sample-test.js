@@ -51,4 +51,9 @@ describe("DeFi", function () {
     const cDAIBalance = await cDAI_TokenContract.balanceOf(DeFi_Instance.address);
     console.log("Balance: ", cDAIBalance);
   });
+
+  it("Should be able to get chainlink price feed data", async function() {
+    let ethPrice = await DeFi_Instance.getLatestPrice();
+    console.log("ETH Price: ", ethPrice);
+  })
 });
